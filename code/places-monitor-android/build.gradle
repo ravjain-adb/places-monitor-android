@@ -25,7 +25,7 @@ ext {
 
 repositories {
     google()
-    mavenCenter()
+    mavenCentral()
 }
 
 android {
@@ -253,7 +253,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.adobe.marketing.mobile'
             artifactId = rootProject.moduleName
-            version = rootProject.mouduleVersion
+            version = rootProject.moduleVersion
             artifact("$buildDir/outputs/aar/${moduleAARName}")
             artifact javadocPublish
 

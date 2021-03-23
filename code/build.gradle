@@ -1,7 +1,10 @@
 buildscript {
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         google()
-        mavenCenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
@@ -14,7 +17,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCenter()
+        mavenCentral()
         maven {
             url artifactoryUrl
             credentials {
