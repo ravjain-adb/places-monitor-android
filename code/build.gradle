@@ -19,40 +19,43 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url artifactoryUrl
-            credentials {
-                username = artifactoryUserName
-                password = artifactoryPassword
-            }
+            url "https://plugins.gradle.org/m2/"
         }
-        maven {
-            url artifactorySnapshotUrl
-            credentials {
-                username = artifactoryUserName
-                password = artifactoryPassword
-            }
-        }
+//        maven {
+//            url artifactoryUrl
+//            credentials {
+//                username = artifactoryUserName
+//                password = artifactoryPassword
+//            }
+//        }
+//        maven {
+//            url artifactorySnapshotUrl
+//            credentials {
+//                username = artifactoryUserName
+//                password = artifactoryPassword
+//            }
+//        }
     }
 
     apply plugin: 'maven-publish'
     apply plugin: "com.jfrog.artifactory"
 }
 
-artifactory {
-    contextUrl = artifactoryContextUrl
-    publish {
-        repository {
-            repoKey = artifactoryRepoKey
-            username = artifactoryUserName
-            password = artifactoryPassword
-            maven = true
-        }
-        defaults {
-            publishArtifacts = true
-            publishPom = true
-        }
-    }
-}
+//artifactory {
+//    contextUrl = artifactoryContextUrl
+//    publish {
+//        repository {
+//            repoKey = artifactoryRepoKey
+//            username = artifactoryUserName
+//            password = artifactoryPassword
+//            maven = true
+//        }
+//        defaults {
+//            publishArtifacts = true
+//            publishPom = true
+//        }
+//    }
+//}
 
 ext {
     // android config
