@@ -1,6 +1,20 @@
 apply plugin: "com.android.library"
 apply plugin: "jacoco"
-apply plugin: "com.jfrog.bintray"
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+if (project.hasProperty("signKeyLoc") && project.hasProperty("signKeyId") && project.hasProperty("signPass")) {
+    ext["signing.secretKeyRingFile"] = "$signKeyLoc"
+    ext["signing.keyId"] = "$signKeyId"
+    ext["signing.password"] = "$signPass"
+}
+if (project.hasProperty("sonatypeUser") && project.hasProperty("sonatypePass")) {
+    ext["ossrhUsername"] = "$sonatypeUser"
+    ext["ossrhPassword"] = "$sonatypePass"
+} else {
+    ext["ossrhUsername"] = ""
+    ext["ossrhPassword"] = ""
+}
 
 ext {
     srcFolders = file("./").listFiles().findAll {
@@ -139,6 +153,8 @@ task javadocPublish(type: Jar) {
 
 
 artifactoryPublish.dependsOn('assemblePhone')
+publish.dependsOn('assemblePhone')
+
 publishing {
     publications {
         aar(MavenPublication) {
@@ -234,6 +250,57 @@ publishing {
                 googleLocationServiceDependencyNode.appendNode('version', mavenGoogleLocationServiceVersion)
             }
         }
+        release(MavenPublication) {
+            groupId = 'com.adobe.marketing.mobile'
+            artifactId = rootProject.moduleName
+            version = rootProject.mouduleVersion
+            artifact("$buildDir/outputs/aar/${moduleAARName}")
+            artifact javadocPublish
+
+            pom {
+                name = mavenRepoName
+                description = mavenRepoDescription
+                url = 'https://aep-sdks.gitbook.io'
+                licenses {
+                    license {
+                        name = 'Adobe Proprietary'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'adobe'
+                        name = 'adobe'
+                        email = 'adobe-mobile-testing@adobe.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:github.com//Adobe-Marketing-Cloud/acp-sdks.git'
+                    developerConnection = 'scm:git:ssh://github.com//Adobe-Marketing-Cloud/acp-sdks.git'
+                    url = 'https://github.com/Adobe-Marketing-Cloud/acp-sdks'
+                }
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    project.configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
     }
 }
 
@@ -242,40 +309,9 @@ artifactoryPublish {
     publications(publishing.publications.aarSnapshot)
 }
 
-bintray {
-    user = 'sdkci'
-    //This apiKey is passed as a gradle parameter to the task
-    //from the Jenkins Pipeline.
-    if (project.hasProperty("apiKey")) {
-        key = "$apiKey"
-    } else {
-        key = "xxxxxxxxxxxxxxx"
-    }
-
-    String gpgpass = "xxxxxxxxxxxxxxx"
-    if (project.hasProperty("gpgPassphrase")) {
-        gpgpass = "$gpgPassphrase"
+signing {
+    sign publishing.publications.release
 }
-    dryRun = false
-    pkg {
-        repo = "mobileservicesdk"
-        name = mavenRepoName
-        userOrg = "eaps"
-        version {
-            name = rootProject.moduleVersion
-            desc = mavenRepoDescription
-            gpg {
-                sign = true
-                passphrase = gpgpass
-            }
-        }
-    }
-
-    publications = ['aar']
-}
-
-bintrayUpload.dependsOn('assemblePhone')
-
 
 configurations.all {
     resolutionStrategy {
