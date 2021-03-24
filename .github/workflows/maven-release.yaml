@@ -2,7 +2,7 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     branches:
-      - use-githubactions
+      - [master, main]
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -12,14 +12,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Install NDK
         run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.4.7075529" --sdk_root=${ANDROID_SDK_ROOT}
-      - name: Configure git user for release commits
-        env:
-          X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
-        run: |
-          git config user.email "Grp-opensourceoffice@adobe.com"
-          git config user.name "${X_GITHUB_USERNAME}"
       - name: Import GPG key
         env:
           GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
