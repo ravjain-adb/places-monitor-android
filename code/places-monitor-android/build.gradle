@@ -6,7 +6,7 @@ apply plugin: 'signing'
 if (project.hasProperty("signKeyLoc") && project.hasProperty("signKeyId") && project.hasProperty("signPass")) {
     //ext["signing.secretKeyRingFile"] = "$signKeyLoc"
     //ext["signing.keyId"] = "$signKeyId"
-    ext["signing.gnupg.passphrase"] = "$signPass"
+    //ext["signing.gnupg.passphrase"] = "$signPass"
     //ext["signing.gnupg.keyName"] = "somename"
 }
 if (project.hasProperty("sonatypeUser") && project.hasProperty("sonatypePass")) {
@@ -310,8 +310,17 @@ artifactoryPublish {
     publications(publishing.publications.aarSnapshot)
 }
 
+ext."signing.gnupg.executable"="gpg"
+ext."signing.gnupg.keyName"=System.getenv("GPG_KEY_ID")
+ext."signing.gnupg.passphrase"=System.getenv("GPG_PASSPHRASE")
+
 signing {
     useGpgCmd()
+    required {
+        tasks.withType(PublishToMavenRepository).find {
+            gradle.taskGraph.hasTask it
+        }
+    }
     sign publishing.publications.release
 }
 
