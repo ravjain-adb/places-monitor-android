@@ -14,6 +14,12 @@ jobs:
           java-version: 1.8
       - name: Install NDK
         run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;21.4.7075529" --sdk_root=${ANDROID_SDK_ROOT}
+      - name: Configure git user for release commits
+        env:
+          X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
+        run: |
+          git config user.email "Grp-opensourceoffice@adobe.com"
+          git config user.name "${X_GITHUB_USERNAME}"
       - name: Import GPG key
         env:
           GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
@@ -25,11 +31,11 @@ jobs:
       - name: Publish package
         run: |
           code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease
-          code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository -PsignKeyLoc='~/.gnupg/secring.gpg' -PsignPass=$SIGNING_PASSWORD -PsignKeyId=$GPG_KEY_ID -PsonatypeUser=$MAVEN_USERNAME -PsonatypePass='$MAVEN_PASSWORD' --stacktrace
+          code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository --stacktrace
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_PASSWPRD: ${{ secrets.GPG_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 #          SIGNING_KEY_ID: ${{ secrets.GPG_SECRET_KEY_ID }}
 #          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
 #          ORG_GRADLE_PROJECT_signingGnupgPassphrase: ${{ secrets.GPG_PASSPHRASE }}
