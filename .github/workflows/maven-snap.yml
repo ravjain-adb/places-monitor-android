@@ -2,9 +2,8 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     branches:
-      - master
-      - main
-      - use-githubactions
+      - staging
+      - use-githubactions-staging
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -31,7 +30,7 @@ jobs:
       - name: Publish to maven central staging repository
         run: |
           code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease
-          code/gradlew -p code/places-monitor-android publishAarSnapshotPublicationToSonatypeRepository
+          code/gradlew -p code/places-monitor-android publishAarSnapshotPublicationToSonatypeRepository --stacktrace
         env:
           SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
