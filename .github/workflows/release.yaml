@@ -23,7 +23,7 @@ jobs:
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
       - name: Publish package
         run: |
-          code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleDebug
+          code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease
           code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository -PsignKeyLoc='~/.gnupg/secring.gpg' -PsignPass=$SIGNING_PASSWORD -PsignKeyId=$SIGNING_KEY_ID -PsonatypeUser=$MAVEN_USERNAME -PsonatypePass='$MAVEN_PASSWORD' --stacktrace
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
