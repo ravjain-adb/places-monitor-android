@@ -139,7 +139,6 @@ task javadocPublish(type: Jar) {
 }
 
 
-artifactoryPublish.dependsOn('assemblePhone')
 publish.dependsOn('assemblePhone')
 
 publishing {
@@ -281,11 +280,6 @@ publishing {
             }
         }
     }
-}
-
-
-artifactoryPublish {
-    publications(publishing.publications.aarSnapshot)
 }
 
 ext."signing.gnupg.executable"="gpg"

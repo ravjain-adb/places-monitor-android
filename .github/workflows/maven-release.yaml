@@ -30,7 +30,7 @@ jobs:
       - name: Publish to maven central staging repository
         run: |
           code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease
-          code/gradlew -p code/places-monitor-android artifactoryPublish
+          code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository
         env:
           SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
