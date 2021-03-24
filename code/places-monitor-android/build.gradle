@@ -197,7 +197,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.adobe.marketing.mobile'
             artifactId = rootProject.moduleName
-            version = rootProject.moduleVersion
+            version = getVersion()
             artifact("$buildDir/outputs/aar/${moduleAARName}")
             artifact javadocPublish
 
