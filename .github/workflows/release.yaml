@@ -30,5 +30,5 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           SIGNING_PASSWPRD: ${{ secrets.GPG_PASSPHRASE }}
           SIGNING_KEY_ID: ${{ secrets.GPG_SECRET_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingPassword: $ {{ secrets.GPG_PASSPHRASE }}
-          ORG_GRADLE_PROJECT_signingGnupgPassphrase: $ {{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingGnupgPassphrase: ${{ secrets.GPG_PASSPHRASE }}
