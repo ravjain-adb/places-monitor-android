@@ -2,7 +2,8 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     branches:
-      - [master, main]
+      - master
+      - main
 jobs:
   publish:
     runs-on: ubuntu-latest
