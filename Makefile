@@ -3,4 +3,7 @@ FILE_NAMES_CONTAINS_VERSION = ./code/gradle.properties ./code/places-monitor-and
 
 check-version:
 	if curl -H "Accept: application/xml" -H "Content-Type: application/xml" -X GET ${URL_MAVEN_METADATA} | grep -o "<latest>.*</latest>" | grep -o "[0-9]*\.[0-9]*\.[0-9]*" | xargs -Istr grep -o -i "[mouduleVersion|version].*str" ${FILE_NAMES_CONTAINS_VERSION}; then exit 1; else exit 0; fi
-	
+
+publish:
+	(code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease)
+	(code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository -PsonatypeUser=username -PsonatypePass=somepass -PsignPass=adobe-sonatype --stacktrace)

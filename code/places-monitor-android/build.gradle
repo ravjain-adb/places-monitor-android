@@ -4,9 +4,10 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 if (project.hasProperty("signKeyLoc") && project.hasProperty("signKeyId") && project.hasProperty("signPass")) {
-    ext["signing.secretKeyRingFile"] = "$signKeyLoc"
-    ext["signing.keyId"] = "$signKeyId"
-    ext["signing.password"] = "$signPass"
+    //ext["signing.secretKeyRingFile"] = "$signKeyLoc"
+    //ext["signing.keyId"] = "$signKeyId"
+    ext["signing.gnupg.passphrase"] = "$signPass"
+    //ext["signing.gnupg.keyName"] = "somename"
 }
 if (project.hasProperty("sonatypeUser") && project.hasProperty("sonatypePass")) {
     ext["ossrhUsername"] = "$sonatypeUser"
@@ -310,6 +311,7 @@ artifactoryPublish {
 }
 
 signing {
+    useGpgCmd()
     sign publishing.publications.release
 }
 
