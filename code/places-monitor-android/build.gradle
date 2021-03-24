@@ -272,7 +272,6 @@ publishing {
         maven {
             name = "sonatype"
             url = version.endsWith('SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            url =
 
             credentials {
                 username = System.getenv("SONATYPE_USERNAME")
