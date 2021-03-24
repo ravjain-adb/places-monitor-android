@@ -6,4 +6,4 @@ check-version:
 
 publish:
 	(code/gradlew -p code/places-monitor-android assemblePhoneCoreBundleRelease)
-	(code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository -PsonatypeUser=username -PsonatypePass=somepass -PsignPass=adobe-sonatype --stacktrace)
+	(code/gradlew -p code/places-monitor-android publishReleasePublicationToSonatypeRepository --stacktrace)
